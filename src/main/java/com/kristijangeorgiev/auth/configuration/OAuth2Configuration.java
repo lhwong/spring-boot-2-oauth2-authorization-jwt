@@ -1,5 +1,6 @@
 package com.kristijangeorgiev.auth.configuration;
 
+import java.security.KeyPair;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -95,11 +96,21 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 			endpoints.requestFactory(requestFactory());
 	}
 
-	@Bean
+	/*@Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 		JwtAccessTokenConverter converter = new CustomTokenEnhancer();
 		converter.setKeyPair(
 				new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), "password".toCharArray()).getKeyPair("jwt"));
+		return converter;
+	}*/
+	
+	@Bean
+	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+		JwtAccessTokenConverter converter = new CustomTokenEnhancer();
+		KeyPair keyPair = new KeyStoreKeyFactory(
+				new ClassPathResource("keystore.jks"), "foobar".toCharArray())
+						.getKeyPair("test");
+		converter.setKeyPair(keyPair);
 		return converter;
 	}
 
