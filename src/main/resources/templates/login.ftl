@@ -25,6 +25,9 @@
       <input type="hidden" id="csrf_token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <div>
+            With Github: <a href="/uaa/login/github">click here</a>
+    </div>
   </div>
 </body>
 </html>

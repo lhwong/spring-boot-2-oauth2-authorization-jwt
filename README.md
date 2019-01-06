@@ -269,6 +269,12 @@ To use the refresh token functionality:
 http --form POST adminapp:password@localhost:9999/oauth/token grant_type=refresh_token refresh_token=$REFRESH_TOKEN
 ```
 
+## Changes
+Add login page
+Use the external OAuth2 providers for authentication.
+Use with oauth2-logout-resource and oauth2-logout-ui
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+

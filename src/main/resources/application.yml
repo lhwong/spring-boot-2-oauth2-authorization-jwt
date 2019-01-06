@@ -24,3 +24,22 @@ check-user-scopes: false
 logging:
   level:
     org.springframework.security: DEBUG
+
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write,openid
+      auto-approve-scopes: '.*'
+    
+github:
+  client:
+    clientId: a19290d4de4dd9b0138f
+    clientSecret: 191ab8b51e811d427a5a25ff55aa95432812f89b
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+    

@@ -106,7 +106,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 	
 	@Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-		JwtAccessTokenConverter converter = new CustomTokenEnhancer();
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		KeyPair keyPair = new KeyStoreKeyFactory(
 				new ClassPathResource("keystore.jks"), "foobar".toCharArray())
 						.getKeyPair("test");
@@ -120,6 +120,8 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 	class CustomTokenEnhancer extends JwtAccessTokenConverter {
 		@Override
 		public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+			System.out.println(authentication.getPrincipal());
+			
 			User user = (User) authentication.getPrincipal();
 
 			Map<String, Object> info = new LinkedHashMap<String, Object>(accessToken.getAdditionalInformation());
