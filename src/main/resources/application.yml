@@ -20,19 +20,19 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       ddl-auto: validate
-check-user-scopes: false
+check-user-scopes: true
 logging:
   level:
     org.springframework.security: DEBUG
 
-security:
-  oauth2:
-    client:
-      client-id: acme
-      client-secret: acmesecret
-      scope: read,write,openid
-      auto-approve-scopes: '.*'
-    
+#security:
+#  oauth2:
+#    client:
+#      client-id: acme
+#      client-secret: acmesecret
+#      scope: can_read_user
+#      auto-approve-scopes: '.*'
+      
 github:
   client:
     clientId: a19290d4de4dd9b0138f

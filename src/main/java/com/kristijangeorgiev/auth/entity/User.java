@@ -94,4 +94,22 @@ public class User extends BaseIdEntity implements UserDetails {
 
 		return authorities;
 	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

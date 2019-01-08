@@ -1,6 +1,9 @@
 package com.kristijangeorgiev.auth.configuration;
 
 import java.security.KeyPair;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,6 +17,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +34,8 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenRequest;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.springframework.security.oauth2.provider.client.InMemoryClientDetailsService;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpointAuthenticationFilter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -77,6 +84,18 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
 	}
+	
+	/*@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		 		
+		clients.inMemory().withClient("acme").secret("{noop}password")
+				.authorizedGrantTypes("authorization_code", "refresh_token",
+						"password")
+				.autoApprove(true)
+				.authorities("role_user")
+				.scopes("openid");
+		
+	}*/
 
 	@Bean
 	public TokenEndpointAuthenticationFilter tokenEndpointAuthenticationFilter() {
@@ -156,5 +175,7 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
 			return super.createTokenRequest(requestParameters, authenticatedClient);
 		}
 	}
+	
+
 
 }
