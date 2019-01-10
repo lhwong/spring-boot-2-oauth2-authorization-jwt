@@ -1,9 +1,13 @@
 package com.kristijangeorgiev.auth.configuration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +22,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +30,10 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.CompositeFilter;
 
@@ -37,7 +44,7 @@ import org.springframework.web.filter.CompositeFilter;
  * @author Kristijan Georgiev
  *
  */
-@EnableWebSecurity
+//@EnableWebSecurity
 @Configuration
 @EnableOAuth2Client
 @Order(200)
@@ -51,15 +58,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	private OAuth2ClientContext oAuth2ClientContext;
     private OAuthClientConfigurationProperties github;
+    private OAuthClientConfigurationProperties oauthVanilla;
+    
+    //@Autowired
+    //private CustomAuthenticationSuccessHandler successHandler;
+
     
     public WebSecurityConfiguration(OAuth2ClientContext oAuth2ClientContext,
-            @Qualifier("github") OAuthClientConfigurationProperties github
+            @Qualifier("github") OAuthClientConfigurationProperties github,
+            @Qualifier("oauth2-vanilla") OAuthClientConfigurationProperties oauthVanilla
             ) {
 
 		this.oAuth2ClientContext = oAuth2ClientContext;
 		this.github = github;
+		this.oauthVanilla =  oauthVanilla;
 		
 		this.logTheConfig("Github", github);
+        this.logTheConfig("OAuth2 Vanilla", oauthVanilla);
 		
 	}
 
@@ -114,6 +129,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .formLogin()
             .loginPage("/login")
 		.and()
+        	// ...and enable CSRF support using a Cookies strategy...
+        	.csrf()
+        	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		.and()
         // ...and ensure our filters are constructed and used before other filters.
         .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
 
@@ -133,12 +152,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     private Filter ssoFilter() {
         String githubPath = "/login/github";
+        String oauth2VanillaPath = "/login/oauth2-vanilla";
         
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
 
         LOGGER.info("Creating the Servlet Filter for Github on {}...", githubPath);
         filters.add(ssoFilter(github, githubPath));
+        LOGGER.info("Creating the Servlet Filter for oauth2-vanilla on {}...", oauth2VanillaPath);
+        filters.add(ssoFilter(oauthVanilla, oauth2VanillaPath));
         
         
         filter.setFilters(filters);
@@ -161,6 +183,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         filter.setTokenServices(tokenServices);
+        //filter.setAuthenticationSuccessHandler(successHandler);
+        
         return filter;
     }
 	
@@ -172,5 +196,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         LOGGER.debug("Client authentication scheme: {}", client.getClient().getClientAuthenticationScheme());
         LOGGER.debug("Grant type: {}", client.getClient().getGrantType());
     }
+	
+	/*@Component
+    public static class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+	    @Override
+	    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+	                                        Authentication authentication) throws IOException, ServletException {
+	    	LOGGER.debug("$$$$$$$$$$$$$$$$$$$$");
+	    	response.sendRedirect("http://localhost:8080/");
+	    }
+    }*/
 
 }

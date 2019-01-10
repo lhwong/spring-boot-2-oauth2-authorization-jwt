@@ -23,8 +23,8 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 public class ServletFilterConfiguration {
 
     @Bean
-    public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
+        FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<OAuth2ClientContextFilter>();
         registration.setFilter(filter);
         registration.setOrder(-100); // Set our filter to have a higher priority.
         return registration;

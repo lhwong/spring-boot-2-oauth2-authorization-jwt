@@ -28,6 +28,9 @@
     <div>
             With Github: <a href="/uaa/login/github">click here</a>
     </div>
+    <div>
+            With oauth2-vanilla: <a href="/uaa/login/oauth2-vanilla">click here</a>
+    </div>
   </div>
 </body>
 </html>

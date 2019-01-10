@@ -20,11 +20,12 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       ddl-auto: validate
-check-user-scopes: true
+check-user-scopes: false
 logging:
   level:
     org.springframework.security: DEBUG
-
+  file: c:/var/spring-boot-2-oauth-jwt.log
+  
 #security:
 #  oauth2:
 #    client:
@@ -43,3 +44,11 @@ github:
   resource:
     userInfoUri: https://api.github.com/user
     
+oauth2-vanilla:
+  client:
+    accessTokenUri: http://127.0.0.1:9991/uaa/oauth/token
+    userAuthorizationUri: http://127.0.0.1:9991/uaa/oauth/authorize
+    clientId: acme
+    clientSecret: acmesecret
+  resource:
+    userInfoUri: http://127.0.0.1:9991/uaa/user     
