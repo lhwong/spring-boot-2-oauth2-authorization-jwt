@@ -271,7 +271,9 @@ http --form POST adminapp:password@localhost:9999/oauth/token grant_type=refresh
 
 ## Changes
 Add login page
-Use the external OAuth2 providers for authentication.
+
+Use the external OAuth2 providers (oauth2-logout-authserver) for authentication.
+
 Use with oauth2-logout-resource and oauth2-logout-ui
 
 ## License
