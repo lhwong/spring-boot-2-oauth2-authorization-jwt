@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 	private static final String RESOURCE_ID = "mw/adminapp";
 	
-	@RequestMapping({ "/user", "/me" })
+	@RequestMapping({ "/me" })
 	public Map<String, String> user(Principal principal) {
 		Map<String, String> map = new LinkedHashMap<>();
 		map.put("name", principal.getName());
